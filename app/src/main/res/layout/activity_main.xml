@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.sp.yxylfillblankdemo.MainActivity">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="title"
+        android:textSize="22dp"
+        android:gravity="center"
+        android:background="@android:color/holo_blue_light"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_title">
+        <com.example.sp.yxylfillblankdemo.view.FillBlankTextView
+            android:id="@+id/tv_fill_blank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="bottom"
+        android:layout_alignParentBottom="true"
+        android:textSize="22dp"
+        android:gravity="center"
+        android:background="@android:color/holo_orange_light"/>
+
+
+</RelativeLayout>

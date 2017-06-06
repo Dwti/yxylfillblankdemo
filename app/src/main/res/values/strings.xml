@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">yxylfillblankdemo</string>
+    <string name="four_Chinese_characters">四个汉字</string>
+    <string name="single_Chinese_character">加</string>
+</resources>
