@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 
 
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by sp on 17-2-24.
  */
 
-public class FillBlankTextView extends SpanReplaceableTextView<EditText> implements TextWatcher {
+public class FillBlankTextView extends SpanReplaceableTextView<EditText> implements TextWatcher,View.OnClickListener {
 
     private FilledContentChangeListener filledContentChangeListener;
 
@@ -137,5 +138,10 @@ public class FillBlankTextView extends SpanReplaceableTextView<EditText> impleme
         if(filledContentChangeListener != null){
             filledContentChangeListener.filledContentChanged(getFilledContent());
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
