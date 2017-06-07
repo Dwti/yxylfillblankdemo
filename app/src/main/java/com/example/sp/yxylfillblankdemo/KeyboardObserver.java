@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 /**
- * simple and powerful Keyboard show/hidden listener,view {@android.R.id.content} and {@ViewTreeObserver.OnGlobalLayoutListener}
- * Created by yes.cpu@gmail.com 2016/7/13.
+ * Created by sp 2017/6/7.
  */
 public class KeyboardObserver implements ViewTreeObserver.OnGlobalLayoutListener {
-    private static final String TAG = "ListenerHandler";
     private View mRootView;
     private int mOriginHeight;
     private int mPreHeight;
@@ -32,18 +30,12 @@ public class KeyboardObserver implements ViewTreeObserver.OnGlobalLayoutListener
 
     public KeyboardObserver(View rootView) {
         if (rootView == null) {
-            Log.i(TAG, "contextObj is null");
             return;
         }
-//        mRootView = findContentView(contextObj);
         mRootView = rootView;
         if (mRootView != null) {
             addContentTreeObserver();
         }
-    }
-
-    private View findContentView(Activity contextObj) {
-        return contextObj.findViewById(android.R.id.content);
     }
 
     private void addContentTreeObserver() {
@@ -54,7 +46,6 @@ public class KeyboardObserver implements ViewTreeObserver.OnGlobalLayoutListener
     public void onGlobalLayout() {
         int currHeight = mRootView.getHeight();
         if (currHeight == 0) {
-            Log.i(TAG, "currHeight is 0");
             return;
         }
         boolean hasChange = false;
