@@ -24,6 +24,10 @@ public class FillBlankTextView extends SpanReplaceableTextView<EditText> impleme
 
     private List<String> mData = new ArrayList<>();
 
+    private EditText mCurrentClickEditText ;
+
+    private OnEditTextClickListener mOnEditTextClickListener;
+
     public FillBlankTextView(Context context) {
         super(context);
     }
@@ -45,6 +49,7 @@ public class FillBlankTextView extends SpanReplaceableTextView<EditText> impleme
         editText.setPadding(10,0,10,0);
         editText.setGravity(Gravity.CENTER);
         editText.addTextChangedListener(this);
+        editText.setOnClickListener(this);
         return editText;
     }
 
@@ -142,6 +147,16 @@ public class FillBlankTextView extends SpanReplaceableTextView<EditText> impleme
 
     @Override
     public void onClick(View v) {
+        if(mOnEditTextClickListener != null){
+            mOnEditTextClickListener.onEditTextClick((EditText) v);
+        }
+    }
 
+    public void setOnEditTextClickListener(OnEditTextClickListener onEditTextClickListener) {
+        this.mOnEditTextClickListener = onEditTextClickListener;
+    }
+
+    public interface OnEditTextClickListener{
+        void onEditTextClick(EditText editText);
     }
 }
