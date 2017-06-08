@@ -2,6 +2,7 @@ package com.example.sp.yxylfillblankdemo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -93,6 +94,14 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
                     mContent = sb.insert(index1+len,append).toString();
                     mFillBlank.setText(mContent);
                 }
+            }
+        });
+
+        mBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,TextReplaceActivity.class);
+                startActivity(intent);
             }
         });
     }

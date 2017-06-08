@@ -20,6 +20,6 @@ public class FillBlankEmptySpan extends EmptySpan {
 
     @Override
     protected int color() {
-        return Color.TRANSPARENT;
+        return Color.GREEN;
     }
 }

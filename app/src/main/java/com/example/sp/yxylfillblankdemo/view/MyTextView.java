@@ -30,7 +30,7 @@ public class MyTextView extends AppCompatTextView {
         if(onDrawFinishedListener != null){
             onDrawFinishedListener.onDrawFinished();
         }
-        Log.d("MyTextView","onDraw called!");
+        Log.i("MyTextView","onDraw called!");
     }
 
     public OnDrawFinishedListener getOnDrawFinishedListener() {

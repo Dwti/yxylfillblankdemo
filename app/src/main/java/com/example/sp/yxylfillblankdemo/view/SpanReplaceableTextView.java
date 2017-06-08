@@ -34,7 +34,7 @@ public abstract class SpanReplaceableTextView<T extends View> extends FrameLayou
     protected Context mContext;
     protected Spanned mSpannedStr;
     protected EmptySpan[] mEmptySpans;
-    private LinkedHashMap<EmptySpan, T> mLinkedHashMap;
+    protected LinkedHashMap<EmptySpan, T> mLinkedHashMap;
     protected boolean mIsReplaceCompleted = false;
 
     public SpanReplaceableTextView(Context context) {
@@ -92,9 +92,7 @@ public abstract class SpanReplaceableTextView<T extends View> extends FrameLayou
         }
     }
 
-    private int getSpanWidth(List<String> listString) {
-        if (true)
-            return Util.convertDpToPx(getContext(), 60);
+    protected int getSpanWidth(List<String> listString) {
         int width = 0;
         int minTextWidth = getMinSpanWidth();
         if (listString == null || listString.isEmpty())

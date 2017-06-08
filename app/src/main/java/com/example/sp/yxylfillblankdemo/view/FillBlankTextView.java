@@ -3,6 +3,7 @@ package com.example.sp.yxylfillblankdemo.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -10,6 +11,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 
+
+import com.example.sp.yxylfillblankdemo.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +129,16 @@ public class FillBlankTextView extends SpanReplaceableTextView<EditText> impleme
 
     public void setFilledContentChangeListener(FilledContentChangeListener filledContentChangeListener) {
         this.filledContentChangeListener = filledContentChangeListener;
+    }
+
+    @Override
+    protected int getSpanWidth(List<String> listString) {
+        return Util.convertDpToPx(getContext(),60);
+    }
+
+    @Override
+    protected void replaceSpanWithView(Spanned spannedStr) {
+
     }
 
     @Override
