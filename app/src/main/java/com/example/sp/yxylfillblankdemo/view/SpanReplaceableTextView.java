@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +93,8 @@ public abstract class SpanReplaceableTextView<T extends View> extends FrameLayou
     }
 
     private int getSpanWidth(List<String> listString) {
+        if (true)
+            return Util.convertDpToPx(getContext(), 60);
         int width = 0;
         int minTextWidth = getMinSpanWidth();
         if (listString == null || listString.isEmpty())
@@ -164,6 +167,13 @@ public abstract class SpanReplaceableTextView<T extends View> extends FrameLayou
         }
     }
 
+    public TextPaint getPaint(){
+        return mTextView.getPaint();
+    }
+
+    public int getSpanWidth(int index){
+        return mEmptySpans[index].textWidth;
+    }
     public float getTextSize() {
         return mTextView.getTextSize();
     }
