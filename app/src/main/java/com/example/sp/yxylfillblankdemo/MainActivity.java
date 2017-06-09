@@ -1,25 +1,22 @@
 package com.example.sp.yxylfillblankdemo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
-import com.example.sp.yxylfillblankdemo.view.FillBlankTextView;
+import com.example.sp.yxylfillblankdemo.view.SpanReplaceableTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity implements KeyboardObserver.KeyBoardVisibleChangeListener {
 
-    private FillBlankTextView mFillBlank;
+    private SpanReplaceableTextView mFillBlank;
 
     private String mContent;
 
@@ -31,8 +28,6 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
 
     private EditText mEditText;
 
-    private EditText mCurrentClickEditText;
-
     private KeyboardObserver mKeyboardObserver;
 
     private List<String> mAnswers = new ArrayList<>();
@@ -42,7 +37,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         setContentView(R.layout.activity_main);
 
         mRootView = findViewById(R.id.rootLayout);
-        mFillBlank = (FillBlankTextView) findViewById(R.id.tv_fill_blank);
+        mFillBlank = (SpanReplaceableTextView) findViewById(R.id.tv_fill_blank);
         mEditLayout = findViewById(R.id.ll_edit);
         mSend = (Button) findViewById(R.id.btnSend);
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -52,7 +47,6 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         initData();
 
         mContent = FileUtils.fetchFileContent(this, "html.txt");
-        mFillBlank.setText(mContent,mAnswers);
 
         mKeyboardObserver = new KeyboardObserver(mRootView);
         mKeyboardObserver.setKeyBoardVisibleChangeListener(this);
@@ -63,37 +57,11 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
     }
 
     private void initListener() {
-        mFillBlank.setOnEditTextClickListener(new FillBlankTextView.OnEditTextClickListener() {
-            @Override
-            public void onEditTextClick(EditText editText) {
-                mCurrentClickEditText = editText;
-            }
-        });
 
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<EditText> editTexts = mFillBlank.getReplacement();
-                int index = editTexts.indexOf(mCurrentClickEditText);
-                Log.i("index",index+"");
-                String content = mEditText.getText().toString();
-//                int spanWidth = mFillBlank.getSpanWidth(index);
-                int spanWidth = mFillBlank.getSpanWidth(0);
-                float contentWidth = Util.computeStringWidth(content,mFillBlank.getPaint());
-                StringBuilder sb = new StringBuilder(mContent);
-                if(contentWidth > spanWidth){
-                    int index1 = sb.indexOf("<blank>"+index+"</blank>");
-                    int len = String.valueOf("<blank>"+index+"</blank>").length();
-                    //TODO 此处index+1有问题,后面的也是index=1；
-                    float diff = contentWidth - spanWidth;
-                    int count = (int) Math.ceil(diff / spanWidth);
-                    String append = "&nbsp<blank>"+(-1)+"</blank>";
-                    for(int i = 0;i < count; i++){
-                        append += append;
-                    }
-                    mContent = sb.insert(index1+len,append).toString();
-                    mFillBlank.setText(mContent);
-                }
+
             }
         });
 
@@ -104,6 +72,14 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            mFillBlank.setText(mContent,mAnswers);
+        }
     }
 
     @Override

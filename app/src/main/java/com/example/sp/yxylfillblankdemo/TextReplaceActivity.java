@@ -1,7 +1,6 @@
 package com.example.sp.yxylfillblankdemo;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -10,22 +9,17 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.sp.yxylfillblankdemo.view.EmptySpan;
 import com.example.sp.yxylfillblankdemo.view.EmptyTagHandler;
 import com.example.sp.yxylfillblankdemo.view.HtmlImageGetter;
 import com.example.sp.yxylfillblankdemo.view.MyEditText;
 import com.example.sp.yxylfillblankdemo.view.MyTextView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by sp on 17-6-8.
@@ -59,8 +53,7 @@ public class TextReplaceActivity extends Activity {
         mTextView.setOnDrawFinishedListener(new MyTextView.OnDrawFinishedListener() {
             @Override
             public void onDrawFinished() {
-//                replaceSpanWithView(mSpanned);
-                replaceSpanWithViewEx(mSpanned);
+                replaceSpanWithViews(mSpanned);
             }
         });
 
@@ -78,47 +71,7 @@ public class TextReplaceActivity extends Activity {
         }
     }
 
-    protected void replaceSpanWithView(Spanned spannedStr) {
-        if (spannedStr == null) {
-            return;
-        }
-        for (ForegroundColorSpan emptySpan : mSpans) {
-
-            int start = spannedStr.getSpanStart(emptySpan);
-            Layout layout = mTextView.getLayout();
-
-            int lineStart = layout.getLineForOffset(start);
-
-            int topPadding = mTextView.getCompoundPaddingTop();
-            int leftMargin = (int) layout.getPrimaryHorizontal(start);
-
-            int descent = layout.getLineDescent(lineStart);
-            int base = layout.getLineBaseline(lineStart);
-            int spanTop = base + descent - mTextView.getLineHeight();
-            int topMargin = spanTop + topPadding;
-
-
-            View view = mLinkedHashMap.get(emptySpan);
-            if (view == null) {
-                view = new View(this);
-                view.setBackgroundColor(Color.GREEN);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, 0);
-                params.leftMargin = leftMargin;
-                params.topMargin = topMargin;
-                mMaskView.addView(view, params);
-                mLinkedHashMap.put(emptySpan, view);
-            } else {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                params.leftMargin = leftMargin;
-                params.topMargin = topMargin;
-                view.setLayoutParams(params);
-            }
-        }
-    }
-
-
-
-    protected void replaceSpanWithViewEx(Spanned spannedStr) {
+    protected void replaceSpanWithViews(Spanned spannedStr) {
 
         if (spannedStr == null) {
             return;
@@ -127,6 +80,8 @@ public class TextReplaceActivity extends Activity {
 
             int start = spannedStr.getSpanStart(emptySpan);
             int end = spannedStr.getSpanEnd(emptySpan);
+
+            Log.e("span",spannedStr.subSequence(start,end).toString());
             Layout layout = mTextView.getLayout();
 
             int lineStart = layout.getLineForOffset(start); //span的起始行

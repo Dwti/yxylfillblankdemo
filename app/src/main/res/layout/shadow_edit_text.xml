@@ -4,16 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <View
+        android:id="@+id/viewTop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="0dp"
-        android:background="@null"/>
+        android:background="@drawable/selector_blank_shadow"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:background="#89e00d"/>
 
 </LinearLayout>

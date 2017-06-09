@@ -1,10 +1,10 @@
-l <img src="http://scc.jsyxw.cn/image/20160812/1470975461952608.png"></img> l ook <Empty>blank party no matter how many charactor in here</Empty> into my eye
+l <img src="http://scc.jsyxw.cn/image/20160812/1470975461952608.png"></img> l ook <Fill>blank party no matter how many character in here</Fill> into my eye
 you will see what you mean to me
 search your <img src="http://scc.jsyxw.cn/image1/20161026/1477411259222048.png"></img> heart
-search your <blank>0</blank>
+search your
 and when you found me there
 you will search no more
-look <blank>1</blank>into my eye
+look into my eye
 <Empty>you will see</Empty>
 what you mean to me <Empty>look into my eye</Empty>
 you will see
@@ -12,15 +12,15 @@ what you mean to me
 look into my eye
 you will see
 what you mean to me
-look into <Empty>blank party no matter how many charactor in here</Empty> my eye
-you will <blank>2</blank> see
+look into <Fill>blank party no matter how many charactor in here</Fill> my eye
+you will see
 what you mean to me
 look into my eye
-you will see <blank>3</blank>
+you will see
 what you mean to me look into my eye
 you will see what you mean to me
 look into my eye
-you will see what you mean to me <blank>4</blank>
+you will see what you mean to me
 look into my eye
 you will see
 what you mean to me
@@ -28,11 +28,11 @@ look into my eye
 you will see
 what you mean to me
 look into my eye
-you will <Empty>blank party no matter how many charactor in here</Empty> see
+you will <Empty>blank party no matter how many character in here</Empty> see
 what you mean to me
 look into my eye
 you will see
 what you mean to me
 look into my eye
 you will see
-what you mean to me <blank>5</blank>
+what you mean to me <Fill> what you mean to me </Fill>

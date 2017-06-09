@@ -5,6 +5,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 
 import org.xml.sax.XMLReader;
 
@@ -19,19 +20,25 @@ public class EmptyTagHandler implements Html.TagHandler {
     @Override
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
 
-        if (opening && tag.toLowerCase().equals(getTag())) {
+        //有内容的空
+        if (opening && tag.toLowerCase().equals("fill")) {
             start = output.length();
         }
-        if (!opening && tag.toLowerCase().equals(getTag())) {
+        if (!opening && tag.toLowerCase().equals("fill")) {
             end = output.length();
             if (start != end) {
-                ForegroundColorSpan fcs = new ForegroundColorSpan(Color.RED);
-                output.setSpan(fcs, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                output.setSpan(new ForegroundColorSpan(Color.RED), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
-    }
-
-    protected String getTag(){
-        return "empty";
+        //没有内容的空
+        if (opening && tag.toLowerCase().equals("empty")) {
+            start = output.length();
+        }
+        if (!opening && tag.toLowerCase().equals("empty")) {
+            end = output.length();
+            if (start != end) {
+                output.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
     }
 }
