@@ -75,6 +75,8 @@ public class SpanReplaceableTextView extends FrameLayout {
         if (spannedStr == null) {
             return;
         }
+        mMaskView.removeAllViews();
+        mLinkedHashMap.clear();
         for (ForegroundColorSpan emptySpan : mSpans) {
 
             int start = spannedStr.getSpanStart(emptySpan);
@@ -87,9 +89,7 @@ public class SpanReplaceableTextView extends FrameLayout {
             int lineEnd = layout.getLineForOffset(end);     //span的结束行
 
 
-            List<View> viewList = mLinkedHashMap.get(emptySpan);
-            if (viewList == null || viewList.size() == 0) {
-                viewList = new ArrayList<>();
+            List<View> viewList = new ArrayList<>();
                 int currLine = lineStart;
 
                 do {
@@ -132,69 +132,6 @@ public class SpanReplaceableTextView extends FrameLayout {
                 }while (currLine <= lineEnd);
 
                 mLinkedHashMap.put(emptySpan,viewList);
-
-            } else {
-                int currLine = lineStart;
-
-                do {
-
-                    int topPadding = mTextView.getCompoundPaddingTop();
-                    float startLeftMargin = layout.getPrimaryHorizontal(currLine == lineStart? start:0);
-                    float endLeftMargin = layout.getPrimaryHorizontal(end);
-
-
-                    int descent = layout.getLineDescent(currLine);
-                    int base = layout.getLineBaseline(currLine);
-                    int spanTop = base + descent - mTextView.getLineHeight();
-                    int topMargin = spanTop + topPadding;
-
-                    float lineWidth = layout.getLineWidth(currLine);
-                    int width;
-
-                    if(lineStart == lineEnd){
-                        width = (int) (endLeftMargin - startLeftMargin);
-                    }else {
-                        if(currLine == lineStart){
-                            width = (int) (lineWidth - startLeftMargin);
-                        }else if(currLine == lineEnd){
-                            width = (int) endLeftMargin;
-                        }else {
-                            width = (int) lineWidth;
-                        }
-                    }
-
-                    boolean isNew = false;
-                    View view = null;
-                    RelativeLayout.LayoutParams params;
-                    //TODO 计算有问题
-                    //因为布局的问题，可能会出现同一个span的lineEnd不一致的问题，如果不一致，某些情况下会导致currLine - lineStart = viewList.size()
-                    if(viewList != null && currLine - lineStart < viewList.size()){
-                        view = viewList.get(currLine - lineStart);
-                    }
-                    if(view == null){
-                        view = getView();
-                        isNew = true;
-                        params = new RelativeLayout.LayoutParams(width, mTextView.getLineHeight());
-                        break;
-                    }else {
-                        params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                        params.width = width;
-                        params.height = mTextView.getLineHeight();
-                    }
-
-                    params.leftMargin = (int) startLeftMargin;
-                    params.topMargin = topMargin;
-                    view.setLayoutParams(params);
-
-                    //这种情况说明上面走的是view为null的情况，需要重新添加进去
-                    if(isNew){
-                        viewList.add(view);
-                        mMaskView.addView(view);
-                    }
-                    currLine ++;
-
-                }while (currLine <= lineEnd);
-            }
         }
 //        int count = 0;
 //        Set<ForegroundColorSpan> set  = mHashMap.keySet();

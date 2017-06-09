@@ -76,6 +76,8 @@ public class TextReplaceActivity extends Activity {
         if (spannedStr == null) {
             return;
         }
+        mMaskView.removeAllViews();
+        mLinkedHashMap.clear();
         for (ForegroundColorSpan emptySpan : mSpans) {
 
             int start = spannedStr.getSpanStart(emptySpan);
@@ -87,10 +89,8 @@ public class TextReplaceActivity extends Activity {
             int lineStart = layout.getLineForOffset(start); //span的起始行
             int lineEnd = layout.getLineForOffset(end);     //span的结束行
 
+            List<View> viewList = new ArrayList<>();
 
-            List<View> viewList = mHashMap.get(emptySpan);
-            if (viewList == null || viewList.size() == 0) {
-                viewList = new ArrayList<>();
                 int currLine = lineStart;
 
                 do {
@@ -134,47 +134,6 @@ public class TextReplaceActivity extends Activity {
 
                 mHashMap.put(emptySpan,viewList);
 
-            } else {
-                    int currLine = lineStart;
-
-                    do {
-
-                        int topPadding = mTextView.getCompoundPaddingTop();
-                        float startLeftMargin = layout.getPrimaryHorizontal(currLine == lineStart? start:0);
-                        float endLeftMargin = layout.getPrimaryHorizontal(end);
-
-
-                        int descent = layout.getLineDescent(currLine);
-                        int base = layout.getLineBaseline(currLine);
-                        int spanTop = base + descent - mTextView.getLineHeight();
-                        int topMargin = spanTop + topPadding;
-
-                        float lineWidth = layout.getLineWidth(currLine);
-                        int width;
-
-                        if(lineStart == lineEnd){
-                            width = (int) (endLeftMargin - startLeftMargin);
-                        }else {
-                            if(currLine == lineStart){
-                                width = (int) (lineWidth - startLeftMargin);
-                            }else if(currLine == lineEnd){
-                                width = (int) endLeftMargin;
-                            }else {
-                                width = (int) lineWidth;
-                            }
-                        }
-
-                        View view = viewList.get(currLine - lineStart);
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                        params.width = width;
-                        params.leftMargin = (int) startLeftMargin;
-                        params.topMargin = topMargin;
-                        view.setLayoutParams(params);
-
-                        currLine ++;
-
-                    }while (currLine <= lineEnd);
-            }
         }
 //        int count = 0;
 //        Set<ForegroundColorSpan> set  = mHashMap.keySet();
