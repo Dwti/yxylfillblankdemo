@@ -6,8 +6,7 @@ and when you found me there
 you will search no more
 look <blank>1</blank>into my eye
 <Empty>you will see</Empty>
-what you mean to me<Empty>
-look into my eye</Empty>
+what you mean to me <Empty>look into my eye</Empty>
 you will see
 what you mean to me
 look into my eye

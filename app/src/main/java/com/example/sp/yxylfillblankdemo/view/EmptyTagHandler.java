@@ -25,7 +25,7 @@ public class EmptyTagHandler implements Html.TagHandler {
         if (!opening && tag.toLowerCase().equals(getTag())) {
             end = output.length();
             if (start != end) {
-                ForegroundColorSpan fcs = new ForegroundColorSpan(Color.TRANSPARENT);
+                ForegroundColorSpan fcs = new ForegroundColorSpan(Color.RED);
                 output.setSpan(fcs, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }

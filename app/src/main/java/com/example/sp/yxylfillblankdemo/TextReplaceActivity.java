@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -20,8 +21,11 @@ import com.example.sp.yxylfillblankdemo.view.MyEditText;
 import com.example.sp.yxylfillblankdemo.view.MyTextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by sp on 17-6-8.
@@ -116,8 +120,6 @@ public class TextReplaceActivity extends Activity {
 
     protected void replaceSpanWithViewEx(Spanned spannedStr) {
 
-//        mMaskView.removeAllViews();
-//        mHashMap.clear();
         if (spannedStr == null) {
             return;
         }
@@ -127,83 +129,105 @@ public class TextReplaceActivity extends Activity {
             int end = spannedStr.getSpanEnd(emptySpan);
             Layout layout = mTextView.getLayout();
 
-            int lineStart = layout.getLineForOffset(start);
-            int lineEnd = layout.getLineForOffset(end);
+            int lineStart = layout.getLineForOffset(start); //span的起始行
+            int lineEnd = layout.getLineForOffset(end);     //span的结束行
+
 
             List<View> viewList = mHashMap.get(emptySpan);
             if (viewList == null || viewList.size() == 0) {
                 viewList = new ArrayList<>();
-                int currLineStart = lineStart;
+                int currLine = lineStart;
 
                 do {
 
                     int topPadding = mTextView.getCompoundPaddingTop();
-                    int startLeftMargin = (int) layout.getPrimaryHorizontal(currLineStart == lineStart? start:0);
-                    int endLeftMargin = (int) layout.getPrimaryHorizontal(end);
+                    float startLeftMargin = layout.getPrimaryHorizontal(currLine == lineStart? start:0); //span的起始位置的左边距
+                    float endLeftMargin = layout.getPrimaryHorizontal(end);           //span结束位置的左边距
 
 
-                    int descent = layout.getLineDescent(currLineStart);
-                    int base = layout.getLineBaseline(currLineStart);
+                    int descent = layout.getLineDescent(currLine);
+                    int base = layout.getLineBaseline(currLine);
                     int spanTop = base + descent - mTextView.getLineHeight();
                     int topMargin = spanTop + topPadding;
 
-                    float lineWidth = layout.getLineWidth(currLineStart);
+                    float lineWidth = layout.getLineWidth(currLine);
                     int width;
 
                     if(lineStart == lineEnd){
-                        width = endLeftMargin - startLeftMargin;
+                        width = (int) (endLeftMargin - startLeftMargin);
                     }else {
-                        if(currLineStart == lineStart){
+                        if(currLine == lineStart){
                             width = (int) (lineWidth - startLeftMargin);
-                        }else if(currLineStart == lineEnd){
-                            width = endLeftMargin;
+                        }else if(currLine == lineEnd){
+                            width = (int) endLeftMargin;
                         }else {
                             width = (int) lineWidth;
                         }
                     }
 
-
                     MyEditText view = new MyEditText(this);
-//                    view.setBackgroundColor(Color.GREEN);
-//                    view.setPadding(0,0,0,0);
-//                    view.setBackground(getResources().getDrawable(R.drawable.fill_empty_bg));
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, mTextView.getLineHeight());
-                    params.leftMargin = startLeftMargin;
+                    params.leftMargin = (int) startLeftMargin;
                     params.topMargin = topMargin;
                     mMaskView.addView(view, params);
 
                     viewList.add(view);
 
-                    currLineStart ++;
+                    currLine ++;
 
-                }while (currLineStart != lineEnd + 1);
+                }while (currLine <= lineEnd);
 
                 mHashMap.put(emptySpan,viewList);
 
             } else {
-                    int currLineStart = lineStart;
+                    int currLine = lineStart;
 
                     do {
 
                         int topPadding = mTextView.getCompoundPaddingTop();
-                        int leftMargin = (int) layout.getPrimaryHorizontal(currLineStart == lineStart? start:0);
+                        float startLeftMargin = layout.getPrimaryHorizontal(currLine == lineStart? start:0);
+                        float endLeftMargin = layout.getPrimaryHorizontal(end);
 
 
-                        int descent = layout.getLineDescent(currLineStart);
-                        int base = layout.getLineBaseline(currLineStart);
+                        int descent = layout.getLineDescent(currLine);
+                        int base = layout.getLineBaseline(currLine);
                         int spanTop = base + descent - mTextView.getLineHeight();
                         int topMargin = spanTop + topPadding;
 
-                        View view = viewList.get(currLineStart - lineStart);
+                        float lineWidth = layout.getLineWidth(currLine);
+                        int width;
+
+                        if(lineStart == lineEnd){
+                            width = (int) (endLeftMargin - startLeftMargin);
+                        }else {
+                            if(currLine == lineStart){
+                                width = (int) (lineWidth - startLeftMargin);
+                            }else if(currLine == lineEnd){
+                                width = (int) endLeftMargin;
+                            }else {
+                                width = (int) lineWidth;
+                            }
+                        }
+
+                        View view = viewList.get(currLine - lineStart);
                         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                        params.leftMargin = leftMargin;
+                        params.width = width;
+                        params.leftMargin = (int) startLeftMargin;
                         params.topMargin = topMargin;
                         view.setLayoutParams(params);
 
-                        currLineStart ++;
+                        currLine ++;
 
-                    }while (currLineStart != lineEnd + 1);
+                    }while (currLine <= lineEnd);
             }
         }
+//        int count = 0;
+//        Set<ForegroundColorSpan> set  = mHashMap.keySet();
+//        Iterator<ForegroundColorSpan> iterator = set.iterator();
+//        while (iterator.hasNext()){
+//            List<View> views = mHashMap.get(iterator.next());
+//            count += views.size();
+//        }
+//        Log.e("count",count+"");
     }
 }
