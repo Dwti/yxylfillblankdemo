@@ -6,35 +6,37 @@ import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
 import com.example.sp.yxylfillblankdemo.R;
+import com.example.sp.yxylfillblankdemo.SpanInfo;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Created by sp on 17-2-23.
  */
 
 public class SpanReplaceableTextView extends FrameLayout {
-    protected MyTextView mTextView;
-    protected RelativeLayout mMaskView;
+    protected XTextView mTextView;
+    protected RelativeLayout mOverLayViewContainer;
     protected Context mContext;
-    protected Spanned mSpannedStr;
-    protected ForegroundColorSpan[] mSpans;
-    protected LinkedHashMap<ForegroundColorSpan, List<View>> mLinkedHashMap;
+    private Spanned mSpannedStr;
+    private ForegroundColorSpan[] mSpans;
+    private TreeMap<SpanInfo, List<BlankView>> mHashMap;
     protected boolean mIsReplaceCompleted = false;
+    private OnBlankClickListener mOnBlankClickListener;
+    private int mClickSpanStart = NONE;     //为了记录点击的是哪一个span，这样的话，弹起或者收起键盘重绘的时候，就能根据这个span的起始位置，去设置覆盖span的view的选中或者非选中状态
+    InputMethodManager imm ;
+    public static final int NONE = -1; //点击的位置为空，既没有点击的span(比如键盘收起的时候，需要清除所有的span的选中状态)
 
     public SpanReplaceableTextView(Context context) {
         super(context);
@@ -53,11 +55,12 @@ public class SpanReplaceableTextView extends FrameLayout {
 
     private void initView(Context context) {
         mContext = context;
-        mLinkedHashMap = new LinkedHashMap<>();
+        mHashMap = new TreeMap<>();
         View view = LayoutInflater.from(context).inflate(R.layout.replaceable_text_view, this, true);
-        mTextView = (MyTextView) view.findViewById(R.id.textView);
-        mMaskView = (RelativeLayout) view.findViewById(R.id.relativeLayout);
+        mTextView = (XTextView) view.findViewById(R.id.textView);
+        mOverLayViewContainer = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         mTextView.setOnDrawFinishedListener(new TextViewOnDrawFinishedListener());
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     public void setText(String text) {
@@ -70,26 +73,55 @@ public class SpanReplaceableTextView extends FrameLayout {
         mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),ForegroundColorSpan.class);
     }
 
-    protected void replaceSpanWithViews(Spanned spannedStr) {
+    public Spanned getSpanned(){
+        return mSpannedStr;
+    }
 
-        if (spannedStr == null) {
+    public ForegroundColorSpan[] getForegroundColorSpans(){
+        return mSpans;
+    }
+
+    public int getClickSpanStart(){
+        return mClickSpanStart;
+    }
+
+    public void setClickSpanStart(int start){
+        mClickSpanStart = start;
+    }
+
+    public TreeMap<SpanInfo,List<BlankView>> getBlanks(){
+        return mHashMap;
+    }
+
+    public List<String> getFilledContent(){
+        List list = new ArrayList();
+        for(SpanInfo info: mHashMap.keySet()){
+            //正式项目的话，对于ForegroundColor为透明的，需要添加为空字符串(首字母需要变色的时候，也需要处理)
+            list.add(info.getContent());
+        }
+        return list;
+    }
+    protected void replaceSpanWithViews(final Spanned spanned) {
+        if (spanned == null) {
             return;
         }
-        mMaskView.removeAllViews();
-        mLinkedHashMap.clear();
-        for (ForegroundColorSpan emptySpan : mSpans) {
+        mOverLayViewContainer.removeAllViews();
+        mHashMap.clear();
+        for (final ForegroundColorSpan span : mSpans) {
 
-            int start = spannedStr.getSpanStart(emptySpan);
-            int end = spannedStr.getSpanEnd(emptySpan);
+            final int start = spanned.getSpanStart(span);
+            final int end = spanned.getSpanEnd(span);
 
-            Log.e("span",spannedStr.subSequence(start,end).toString());
+            String content = spanned.subSequence(start,end).toString();
+            SpanInfo spanInfo = new SpanInfo(span,content,start,end);
+
             Layout layout = mTextView.getLayout();
 
             int lineStart = layout.getLineForOffset(start); //span的起始行
             int lineEnd = layout.getLineForOffset(end);     //span的结束行
 
 
-            List<View> viewList = new ArrayList<>();
+            List<BlankView> viewList = new ArrayList<>();
                 int currLine = lineStart;
 
                 do {
@@ -119,11 +151,27 @@ public class SpanReplaceableTextView extends FrameLayout {
                         }
                     }
 
-                    View view = getView();
+                    final BlankView view = getView();
+
+                    if(start == mClickSpanStart){
+                        view.setTransparent(false);
+                    }
+
+                    view.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(mOnBlankClickListener != null){
+                                mOnBlankClickListener.onBlankClick(view,spanned.subSequence(start,end).toString(),start);
+                            }
+                        }
+                    });
+
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, mTextView.getLineHeight());
                     params.leftMargin = (int) startLeftMargin;
                     params.topMargin = topMargin;
-                    mMaskView.addView(view, params);
+                    mOverLayViewContainer.addView(view, params);
+
+
 
                     viewList.add(view);
 
@@ -131,7 +179,7 @@ public class SpanReplaceableTextView extends FrameLayout {
 
                 }while (currLine <= lineEnd);
 
-                mLinkedHashMap.put(emptySpan,viewList);
+                mHashMap.put(spanInfo,viewList);
         }
 //        int count = 0;
 //        Set<ForegroundColorSpan> set  = mHashMap.keySet();
@@ -143,15 +191,25 @@ public class SpanReplaceableTextView extends FrameLayout {
 //        Log.e("count",count+"");
     }
 
-    public boolean isReplaceCompleted() {
-        return mIsReplaceCompleted;
+    public void setBlankTransparent(int spanStart, boolean transparent){
+        //可以看一下有没有更好的方法，直接取一个而不是一个数组
+        ForegroundColorSpan span = mSpannedStr.getSpans(spanStart,mSpannedStr.length(),ForegroundColorSpan.class)[0];
+        for(SpanInfo e : mHashMap.keySet()){
+            if(span.equals(e.getSpan())){
+                List<BlankView> views = mHashMap.get(e);
+                for(BlankView v : views){
+                    v.setTransparent(transparent);
+                }
+                break;
+            }
+        }
     }
 
-    public void removeAllReplacementView() {
-        if (mMaskView.getChildCount() > 0) {
-            mMaskView.removeAllViews();
-            mLinkedHashMap.clear();
-        }
+    public void setOnBlankClickListener(OnBlankClickListener listener){
+        mOnBlankClickListener = listener;
+    }
+    public boolean isReplaceCompleted() {
+        return mIsReplaceCompleted;
     }
 
     public float getTextSize() {
@@ -174,15 +232,21 @@ public class SpanReplaceableTextView extends FrameLayout {
         return new HtmlImageGetter(mContext, mTextView);
     }
 
-    protected View getView(){
-        return new MyEditText(mContext);
+    protected BlankView getView(){
+        return new BlankView(mContext);
     }
 
     protected Html.TagHandler getTagHandler(){
         return new EmptyTagHandler();
     }
 
-    private class TextViewOnDrawFinishedListener implements MyTextView.OnDrawFinishedListener {
+
+
+    public interface OnBlankClickListener {
+        void onBlankClick(BlankView view,String filledContent,int spanStart);
+    }
+
+    private class TextViewOnDrawFinishedListener implements XTextView.OnDrawFinishedListener {
 
         @Override
         public void onDrawFinished() {

@@ -14,7 +14,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.example.sp.yxylfillblankdemo.view.MyTextView
+            <com.example.sp.yxylfillblankdemo.view.XTextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.example.sp.yxylfillblankdemo.view.EmptyTagHandler;
 import com.example.sp.yxylfillblankdemo.view.HtmlImageGetter;
-import com.example.sp.yxylfillblankdemo.view.MyEditText;
-import com.example.sp.yxylfillblankdemo.view.MyTextView;
+import com.example.sp.yxylfillblankdemo.view.BlankView;
+import com.example.sp.yxylfillblankdemo.view.XTextView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class TextReplaceActivity extends Activity {
 
-    private MyTextView mTextView;
+    private XTextView mTextView;
 
     private RelativeLayout mMaskView;
 
@@ -45,12 +45,12 @@ public class TextReplaceActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_replace);
-        mTextView = (MyTextView) findViewById(R.id.textView);
+        mTextView = (XTextView) findViewById(R.id.textView);
         mMaskView = (RelativeLayout) findViewById(R.id.relativeLayout);
 
         mContent = FileUtils.fetchFileContent(this, "html.txt");
 
-        mTextView.setOnDrawFinishedListener(new MyTextView.OnDrawFinishedListener() {
+        mTextView.setOnDrawFinishedListener(new XTextView.OnDrawFinishedListener() {
             @Override
             public void onDrawFinished() {
                 replaceSpanWithViews(mSpanned);
@@ -120,7 +120,7 @@ public class TextReplaceActivity extends Activity {
                         }
                     }
 
-                    MyEditText view = new MyEditText(this);
+                    BlankView view = new BlankView(this);
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, mTextView.getLineHeight());
                     params.leftMargin = (int) startLeftMargin;
                     params.topMargin = topMargin;

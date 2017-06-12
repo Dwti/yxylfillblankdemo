@@ -4,8 +4,12 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
+import android.view.View;
 
 import org.xml.sax.XMLReader;
 
@@ -18,7 +22,7 @@ public class EmptyTagHandler implements Html.TagHandler {
     protected int start,end;
 
     @Override
-    public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+    public void handleTag(boolean opening, String tag, final Editable output, XMLReader xmlReader) {
 
         //有内容的空
         if (opening && tag.toLowerCase().equals("fill")) {

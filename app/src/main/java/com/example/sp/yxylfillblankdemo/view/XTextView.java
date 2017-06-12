@@ -10,17 +10,17 @@ import android.util.Log;
  * Created by sp on 17-3-2.
  */
 
-public class MyTextView extends AppCompatTextView {
+public class XTextView extends AppCompatTextView {
     OnDrawFinishedListener onDrawFinishedListener;
-    public MyTextView(Context context) {
+    public XTextView(Context context) {
         super(context);
     }
 
-    public MyTextView(Context context, AttributeSet attrs) {
+    public XTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public XTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
