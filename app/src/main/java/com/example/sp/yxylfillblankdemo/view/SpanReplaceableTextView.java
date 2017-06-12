@@ -35,7 +35,6 @@ public class SpanReplaceableTextView extends FrameLayout {
     protected boolean mIsReplaceCompleted = false;
     private OnBlankClickListener mOnBlankClickListener;
     private int mClickSpanStart = NONE;     //为了记录点击的是哪一个span，这样的话，弹起或者收起键盘重绘的时候，就能根据这个span的起始位置，去设置覆盖span的view的选中或者非选中状态
-    InputMethodManager imm ;
     public static final int NONE = -1; //点击的位置为空，既没有点击的span(比如键盘收起的时候，需要清除所有的span的选中状态)
 
     public SpanReplaceableTextView(Context context) {
@@ -60,7 +59,6 @@ public class SpanReplaceableTextView extends FrameLayout {
         mTextView = (XTextView) view.findViewById(R.id.textView);
         mOverLayViewContainer = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         mTextView.setOnDrawFinishedListener(new TextViewOnDrawFinishedListener());
-        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     public void setText(String text) {
@@ -170,8 +168,6 @@ public class SpanReplaceableTextView extends FrameLayout {
                     params.leftMargin = (int) startLeftMargin;
                     params.topMargin = topMargin;
                     mOverLayViewContainer.addView(view, params);
-
-
 
                     viewList.add(view);
 

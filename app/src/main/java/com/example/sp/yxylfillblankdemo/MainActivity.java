@@ -115,6 +115,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         if(isShow){
             mBottom.setVisibility(View.GONE);
             mEditLayout.setVisibility(View.VISIBLE);
+            mEditText.requestFocus();
         }else {
             mBottom.setVisibility(View.VISIBLE);
             mEditLayout.setVisibility(View.GONE);

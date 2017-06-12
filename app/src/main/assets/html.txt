@@ -1,18 +1,18 @@
-l <img src="http://scc.jsyxw.cn/image/20160812/1470975461952608.png"></img> l ook <Fill>blank party no matter how many character in here</Fill> into my eye
+l <img src="http://scc.jsyxw.cn/image/20160812/1470975461952608.png"></img> l ook <fill>blank party no matter how many character in here</fill> into my eye
 you will see what you mean to me
 search your <img src="http://scc.jsyxw.cn/image1/20161026/1477411259222048.png"></img> heart
 search your
 and when you found me there
 you will search no more
 look into my eye
-<Empty>you will see</Empty>
-what you mean to me <Empty>look into my eye</Empty>
+<empty>you will see</empty>
+what you mean to me <empty>look into my eye</empty>
 you will see
 what you mean to me
 look into my eye
 you will see
 what you mean to me
-look into <Fill>blank party no matter how many charactor in here</Fill> my eye
+look into <fill>blank party no matter how many charactor in here</fill> my eye
 you will see
 what you mean to me
 look into my eye
@@ -28,11 +28,11 @@ look into my eye
 you will see
 what you mean to me
 look into my eye
-you will <Empty>blank party no matter how many character in here</Empty> see
+you will <empty>blank party no matter how many character in here</empty> see
 what you mean to me
 look into my eye
 you will see
 what you mean to me
 look into my eye
 you will see
-what you mean to me <Fill> what you mean to me </Fill>
+what you mean to me <fill> what you mean to me </fill>
