@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         initData();
 
-        mContent = FileUtils.fetchFileContent(this, "html.txt");
+        mContent = FileUtils.fetchFileContent(this, "html1.txt");
 
         mKeyboardObserver = new KeyboardObserver(mRootView);
         mKeyboardObserver.setKeyBoardVisibleChangeListener(this);
@@ -69,7 +69,16 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //找出当前输入的span的位置
+                int currPos = mFillBlank.getCurrentEditBlankPosition();
+                //更新答案的内容
+                mAnswers.set(currPos,mEditText.getText().toString());
+                //重新初始化题干
+                String stem = StemUtil.init(mContent,mAnswers);
+                //重绘
+                mFillBlank.setText(stem);
 
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
             }
         });
 
@@ -104,7 +113,8 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(hasFocus){
-            mFillBlank.setText(mContent,mAnswers);
+            String stem = StemUtil.init(mContent,mAnswers);
+            mFillBlank.setText(stem);
         }
     }
 
@@ -130,11 +140,11 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
     }
 
     private void initData(){
-        mAnswers.add("门前大桥下");
-        mAnswers.add("游过一群鸭");
-        mAnswers.add("快来快来");
-        mAnswers.add("数一数");
-        mAnswers.add("二四六七八");
-        mAnswers.add("门前老爷爷胡子白花花");
+        mAnswers.add("blank party no matter how many character in here");
+        mAnswers.add("");
+        mAnswers.add("you will see");
+        mAnswers.add("blank party no matter how many charactor in here");
+        mAnswers.add("look into my eyes");
+        mAnswers.add("");
     }
 }

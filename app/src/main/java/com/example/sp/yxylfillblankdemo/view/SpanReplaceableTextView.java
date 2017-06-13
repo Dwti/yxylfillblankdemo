@@ -1,6 +1,7 @@
 package com.example.sp.yxylfillblankdemo.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
@@ -62,21 +63,9 @@ public class SpanReplaceableTextView extends FrameLayout {
     }
 
     public void setText(String text) {
-        setText(text, null);
-    }
-
-    public void setText(String text, List<String> textToFill) {
         mSpannedStr = Html.fromHtml(text, getImageGetter(), getTagHandler());
         mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
         mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),ForegroundColorSpan.class);
-    }
-
-    public Spanned getSpanned(){
-        return mSpannedStr;
-    }
-
-    public ForegroundColorSpan[] getForegroundColorSpans(){
-        return mSpans;
     }
 
     public int getClickSpanStart(){
@@ -91,10 +80,22 @@ public class SpanReplaceableTextView extends FrameLayout {
         return mHashMap;
     }
 
+    public int getCurrentEditBlankPosition(){
+        boolean hasFind = false;
+        int index = 0;
+        for(SpanInfo s : mHashMap.keySet()){
+            if(s.getStart() == mClickSpanStart){
+                hasFind = true;
+                break;
+            }
+            index++;
+        }
+        return hasFind?index:-1;
+    }
+
     public List<String> getFilledContent(){
         List list = new ArrayList();
         for(SpanInfo info: mHashMap.keySet()){
-            //正式项目的话，对于ForegroundColor为透明的，需要添加为空字符串(首字母需要变色的时候，也需要处理)
             list.add(info.getContent());
         }
         return list;
@@ -110,7 +111,12 @@ public class SpanReplaceableTextView extends FrameLayout {
             final int start = spanned.getSpanStart(span);
             final int end = spanned.getSpanEnd(span);
 
-            String content = spanned.subSequence(start,end).toString();
+            final String content;
+            if(span.getForegroundColor() == Color.TRANSPARENT){
+                content = "";
+            }else {
+                content = spanned.subSequence(start,end).toString();
+            }
             SpanInfo spanInfo = new SpanInfo(span,content,start,end);
 
             Layout layout = mTextView.getLayout();
@@ -159,7 +165,7 @@ public class SpanReplaceableTextView extends FrameLayout {
                         @Override
                         public void onClick(View v) {
                             if(mOnBlankClickListener != null){
-                                mOnBlankClickListener.onBlankClick(view,spanned.subSequence(start,end).toString(),start);
+                                mOnBlankClickListener.onBlankClick(view,content,start);
                             }
                         }
                     });
@@ -177,6 +183,7 @@ public class SpanReplaceableTextView extends FrameLayout {
 
                 mHashMap.put(spanInfo,viewList);
         }
+        mIsReplaceCompleted = true;
 //        int count = 0;
 //        Set<ForegroundColorSpan> set  = mHashMap.keySet();
 //        Iterator<ForegroundColorSpan> iterator = set.iterator();
@@ -188,10 +195,8 @@ public class SpanReplaceableTextView extends FrameLayout {
     }
 
     public void setBlankTransparent(int spanStart, boolean transparent){
-        //可以看一下有没有更好的方法，直接取一个而不是一个数组
-        ForegroundColorSpan span = mSpannedStr.getSpans(spanStart,mSpannedStr.length(),ForegroundColorSpan.class)[0];
         for(SpanInfo e : mHashMap.keySet()){
-            if(span.equals(e.getSpan())){
+            if(spanStart == e.getStart()){
                 List<BlankView> views = mHashMap.get(e);
                 for(BlankView v : views){
                     v.setTransparent(transparent);
