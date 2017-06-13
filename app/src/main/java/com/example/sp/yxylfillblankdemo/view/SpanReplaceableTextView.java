@@ -9,7 +9,6 @@ import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,7 +34,9 @@ public class SpanReplaceableTextView extends FrameLayout {
     private TreeMap<SpanInfo, List<BlankView>> mHashMap;
     protected boolean mIsReplaceCompleted = false;
     private OnBlankClickListener mOnBlankClickListener;
-    private int mClickSpanStart = NONE;     //为了记录点击的是哪一个span，这样的话，弹起或者收起键盘重绘的时候，就能根据这个span的起始位置，去设置覆盖span的view的选中或者非选中状态
+    private OnReplaceCompleteListener mOnReplaceCompleteListener;
+    private int mLastClickSpanStart = NONE;     //为了记录点击的是哪一个span，这样的话，弹起或者收起键盘重绘的时候，就能根据这个span的起始位置，去设置覆盖span的view的选中或者非选中状态
+    private int mCurrClickSpanStart = NONE;
     public static final int NONE = -1; //点击的位置为空，既没有点击的span(比如键盘收起的时候，需要清除所有的span的选中状态)
 
     public SpanReplaceableTextView(Context context) {
@@ -63,17 +64,30 @@ public class SpanReplaceableTextView extends FrameLayout {
     }
 
     public void setText(String text) {
+        mIsReplaceCompleted = false;
+        mLastClickSpanStart = NONE;
+        mCurrClickSpanStart = NONE;
+        mOverLayViewContainer.removeAllViews();
+        mHashMap.clear();
         mSpannedStr = Html.fromHtml(text, getImageGetter(), getTagHandler());
         mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
         mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),ForegroundColorSpan.class);
     }
 
-    public int getClickSpanStart(){
-        return mClickSpanStart;
+    public int getLastClickSpanStart(){
+        return mLastClickSpanStart;
     }
 
-    public void setClickSpanStart(int start){
-        mClickSpanStart = start;
+    public void setLastClickSpanStart(int start){
+        mLastClickSpanStart = start;
+    }
+
+    public int getCurrClickSpanStart(){
+        return mCurrClickSpanStart;
+    }
+
+    public void setCurrClickSpanStart(int start){
+        mCurrClickSpanStart = start;
     }
 
     public TreeMap<SpanInfo,List<BlankView>> getBlanks(){
@@ -84,7 +98,7 @@ public class SpanReplaceableTextView extends FrameLayout {
         boolean hasFind = false;
         int index = 0;
         for(SpanInfo s : mHashMap.keySet()){
-            if(s.getStart() == mClickSpanStart){
+            if(s.getStart() == mCurrClickSpanStart){
                 hasFind = true;
                 break;
             }
@@ -100,12 +114,30 @@ public class SpanReplaceableTextView extends FrameLayout {
         }
         return list;
     }
+
+    /**
+     * 获取某个span对应的
+     * @param spanStart span的起始位置
+     * @return
+     */
+    public List<BlankView> getBlankViews(int spanStart){
+        List list = new ArrayList(0);
+        for(SpanInfo info: mHashMap.keySet()){
+            if(info.getStart() == spanStart){
+                list = mHashMap.get(info);
+                break;
+            }
+        }
+        return list;
+    }
     protected void replaceSpanWithViews(final Spanned spanned) {
         if (spanned == null) {
             return;
         }
         mOverLayViewContainer.removeAllViews();
         mHashMap.clear();
+
+        int tempClickSpanStart = mLastClickSpanStart;
         for (final ForegroundColorSpan span : mSpans) {
 
             final int start = spanned.getSpanStart(span);
@@ -157,16 +189,18 @@ public class SpanReplaceableTextView extends FrameLayout {
 
                     final BlankView view = getView();
 
-                    if(start == mClickSpanStart){
+                    if(start == tempClickSpanStart){
                         view.setTransparent(false);
                     }
 
                     view.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            mCurrClickSpanStart = start;
                             if(mOnBlankClickListener != null){
                                 mOnBlankClickListener.onBlankClick(view,content,start);
                             }
+                            mLastClickSpanStart = start;
                         }
                     });
 
@@ -184,6 +218,9 @@ public class SpanReplaceableTextView extends FrameLayout {
                 mHashMap.put(spanInfo,viewList);
         }
         mIsReplaceCompleted = true;
+        if(mOnReplaceCompleteListener != null){
+            mOnReplaceCompleteListener.onReplaceComplete();
+        }
 //        int count = 0;
 //        Set<ForegroundColorSpan> set  = mHashMap.keySet();
 //        Iterator<ForegroundColorSpan> iterator = set.iterator();
@@ -208,6 +245,10 @@ public class SpanReplaceableTextView extends FrameLayout {
 
     public void setOnBlankClickListener(OnBlankClickListener listener){
         mOnBlankClickListener = listener;
+    }
+
+    public void setOnReplaceCompleteListener(OnReplaceCompleteListener onReplaceCompleteListener){
+        mOnReplaceCompleteListener = onReplaceCompleteListener;
     }
     public boolean isReplaceCompleted() {
         return mIsReplaceCompleted;
@@ -247,6 +288,9 @@ public class SpanReplaceableTextView extends FrameLayout {
         void onBlankClick(BlankView view,String filledContent,int spanStart);
     }
 
+    public interface OnReplaceCompleteListener{
+        void onReplaceComplete();
+    }
     private class TextViewOnDrawFinishedListener implements XTextView.OnDrawFinishedListener {
 
         @Override

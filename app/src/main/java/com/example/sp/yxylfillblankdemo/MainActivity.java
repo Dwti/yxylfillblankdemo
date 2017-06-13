@@ -77,7 +77,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
                 String stem = StemUtil.init(mContent,mAnswers);
                 //重绘
                 mFillBlank.setText(stem);
-
+                //收起键盘
                 imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
             }
         });
@@ -92,18 +92,39 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
 
         mFillBlank.setOnBlankClickListener(new SpanReplaceableTextView.OnBlankClickListener() {
             @Override
-            public void onBlankClick(BlankView view, String filledContent, int spanStart) {
-                //当键盘为弹起状态时，也就是mFillBlank.getClickSpanStart()!=-1时，需要清除掉 上一个点击的空的选中状态
-                if(mIsKeyboardShowing && spanStart != mFillBlank.getClickSpanStart()){
-                    mFillBlank.setBlankTransparent(mFillBlank.getClickSpanStart(),true);
+            public void onBlankClick(BlankView view, String filledContent, final int spanStart) {
+                //当键盘为弹起状态时，也就是mFillBlank.getLastClickSpanStart()!=-1时，需要清除掉 上一个点击的空的选中状态
+                if(mIsKeyboardShowing && spanStart != mFillBlank.getLastClickSpanStart()){
+                    mFillBlank.setBlankTransparent(mFillBlank.getLastClickSpanStart(),true);
                     mFillBlank.setBlankTransparent(spanStart,false);
                 }
-                mFillBlank.setClickSpanStart(spanStart);
                 if(!mIsKeyboardShowing){
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
                 }
                 mEditText.setText(filledContent);
                 mEditText.setSelection(filledContent.length());
+            }
+        });
+
+        mFillBlank.setOnReplaceCompleteListener(new SpanReplaceableTextView.OnReplaceCompleteListener() {
+            @Override
+            public void onReplaceComplete() {
+                mScrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mFillBlank.getCurrClickSpanStart() >= 0){
+                            //获取最后一个view 并滑动到它的底部
+                            List<BlankView> viewList = mFillBlank.getBlankViews(mFillBlank.getCurrClickSpanStart());
+                            if(viewList.size() > 0){
+                                final BlankView blankView = viewList.get(viewList.size() -1);
+                                //不应该判断bottom 应该判断是不是在可视范围内
+                                if(blankView.getBottom() > mScrollView.getHeight()){
+                                    mScrollView.scrollTo(0,blankView.getBottom() - mScrollView.getHeight());
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
     }
@@ -129,7 +150,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         }else {
             mBottom.setVisibility(View.VISIBLE);
             mEditLayout.setVisibility(View.GONE);
-            mFillBlank.setClickSpanStart(SpanReplaceableTextView.NONE);
+            mFillBlank.setLastClickSpanStart(SpanReplaceableTextView.NONE);
         }
     }
 
