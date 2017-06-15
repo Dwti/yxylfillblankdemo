@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
                 //更新答案的内容
                 mAnswers.set(currPos,mEditText.getText().toString());
                 //重新初始化题干
-                String stem = StemUtil.init(mContent,mAnswers);
+                String stem = StemUtil.initFillBlankStem(mContent,mAnswers);
                 //重绘
                 mFillBlank.setText(stem);
                 //收起键盘
@@ -134,7 +134,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(hasFocus){
-            String stem = StemUtil.init(mContent,mAnswers);
+            String stem = StemUtil.initFillBlankStem(mContent,mAnswers);
             mFillBlank.setText(stem);
         }
     }

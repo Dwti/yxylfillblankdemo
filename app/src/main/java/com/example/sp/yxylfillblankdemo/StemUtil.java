@@ -10,11 +10,22 @@ import java.util.List;
  */
 
 public class StemUtil {
+    private static final String MARK_START = "<font color='#89e00d'>";
+    private static final String MARK_END = "</font>";
 
-    public static String init(@NonNull String stem, @NonNull List<String> answers){
+
+    /**
+     * 初始化填空题题干
+     * @param stem  题干内容
+     * @param answers 空的答案
+     * @return  新的题干
+     */
+    public static String initFillBlankStem(@NonNull String stem, @NonNull List<String> answers){
+
         //<fill>标签 表示空中有答案，需要展示  <empty>标签表示空中没有内容，需要显示为空白
         int i = 0;
         while (stem.contains("(_)")){
+            stem = replaceFirstChar(stem);
             if(TextUtils.isEmpty(answers.get(i))){
                 stem = stem.replaceFirst("\\(_\\)", "<empty>oooooooooooo</empty>");
             }else {
@@ -42,5 +53,27 @@ public class StemUtil {
 
 
         return stem;
+    }
+
+    /**
+     * 如果空前面有首字母，加上html变色处理
+     * @param source 源题干
+     * @return 新的题干
+     */
+    public static String replaceFirstChar(String source){
+        StringBuilder sb = new StringBuilder(source);
+        int index = source.indexOf("(_)");
+        if(index != -1){
+            if(source.length() > 4 && source.startsWith(" ",index-2)){
+                sb.insert(index-1,MARK_START);
+                sb.insert(index+MARK_START.length(),MARK_END);
+            }else if(source.length() == 4){
+                sb.insert(0,MARK_START);
+                sb.insert(MARK_START.length(),MARK_END);
+            }
+            return sb.toString();
+        }else {
+            return source;
+        }
     }
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.sp.yxylfillblankdemo.R;
 import com.example.sp.yxylfillblankdemo.SpanInfo;
+import com.example.sp.yxylfillblankdemo.XForegroundColorSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class SpanReplaceableTextView extends FrameLayout {
     protected RelativeLayout mOverLayViewContainer;
     protected Context mContext;
     private Spanned mSpannedStr;
-    private ForegroundColorSpan[] mSpans;
+    private XForegroundColorSpan[] mSpans;
     private TreeMap<SpanInfo, List<BlankView>> mHashMap;
     protected boolean mIsReplaceCompleted = false;
     private OnBlankClickListener mOnBlankClickListener;
@@ -71,7 +72,7 @@ public class SpanReplaceableTextView extends FrameLayout {
         mHashMap.clear();
         mSpannedStr = Html.fromHtml(text, getImageGetter(), getTagHandler());
         mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
-        mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),ForegroundColorSpan.class);
+        mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),XForegroundColorSpan.class);
     }
 
     public int getLastClickSpanStart(){
@@ -138,7 +139,7 @@ public class SpanReplaceableTextView extends FrameLayout {
         mHashMap.clear();
 
         int tempClickSpanStart = mLastClickSpanStart;
-        for (final ForegroundColorSpan span : mSpans) {
+        for (final XForegroundColorSpan span : mSpans) {
 
             final int start = spanned.getSpanStart(span);
             final int end = spanned.getSpanEnd(span);

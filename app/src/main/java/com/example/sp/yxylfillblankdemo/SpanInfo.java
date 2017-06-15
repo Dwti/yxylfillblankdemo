@@ -8,12 +8,12 @@ import android.text.style.ForegroundColorSpan;
  */
 
 public class SpanInfo implements Comparable<SpanInfo>{
-    private ForegroundColorSpan mSpan;
+    private XForegroundColorSpan mSpan;
     private int mStart;
     private int mEnd;
     private String mContent;
 
-    public SpanInfo(ForegroundColorSpan span, String content,int start, int end) {
+    public SpanInfo(XForegroundColorSpan span, String content,int start, int end) {
         this.mSpan = span;
         mContent = content;
         this.mStart = start;
@@ -24,7 +24,7 @@ public class SpanInfo implements Comparable<SpanInfo>{
         return mSpan;
     }
 
-    public void setSpan(ForegroundColorSpan span){
+    public void setSpan(XForegroundColorSpan span){
         mSpan = span;
     }
 
