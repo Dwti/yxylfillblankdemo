@@ -19,12 +19,10 @@ import java.util.HashMap;
  */
 
 public class HtmlImageGetter implements Html.ImageGetter {
-    Context mContext;
     TextView mTextView;
     HashMap<String, UrlDrawable> mMap;
 
-    public HtmlImageGetter(Context context, TextView textview) {
-        mContext = context;
+    public HtmlImageGetter(TextView textview) {
         mTextView = textview;
         mMap = new HashMap<>();
     }
@@ -34,7 +32,7 @@ public class HtmlImageGetter implements Html.ImageGetter {
         UrlDrawable drawable = new UrlDrawable();
         mMap.put(source, drawable);
         drawable.setBounds(0, 0, 0, 0);
-        Glide.with(mContext)
+        Glide.with(mTextView.getContext())
                 .load(source)
                 .into(new SimpleTarget<GlideDrawable>() {
                     @Override

@@ -14,23 +14,12 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.example.sp.yxylfillblankdemo.view.XTextView
-                android:id="@+id/textView"
+
+            <com.example.sp.yxylfillblankdemo.view.ClozeTextView
+                android:id="@+id/cloze_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="fill" />
-            <RelativeLayout
-                android:id="@+id/relativeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="fill">
-            </RelativeLayout>
+                android:layout_height="wrap_content" />
         </FrameLayout>
     </ScrollView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="bottom"
-        android:background="@android:color/holo_orange_light"/>
 </LinearLayout>

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 
 import com.example.sp.yxylfillblankdemo.view.BlankView;
+import com.example.sp.yxylfillblankdemo.view.OnReplaceCompleteListener;
 import com.example.sp.yxylfillblankdemo.view.SpanReplaceableTextView;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         mBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,TextReplaceActivity.class);
+                Intent intent = new Intent(MainActivity.this,ClozeActivity.class);
                 startActivity(intent);
             }
         });
@@ -106,7 +107,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
             }
         });
 
-        mFillBlank.setOnReplaceCompleteListener(new SpanReplaceableTextView.OnReplaceCompleteListener() {
+        mFillBlank.setOnReplaceCompleteListener(new OnReplaceCompleteListener() {
             @Override
             public void onReplaceComplete() {
                 mScrollView.post(new Runnable() {

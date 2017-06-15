@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TextReplaceActivity"/>
+        <activity android:name=".ClozeActivity"/>
     </application>
 
 </manifest>

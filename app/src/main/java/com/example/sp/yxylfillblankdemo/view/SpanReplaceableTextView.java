@@ -7,6 +7,7 @@ import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -60,6 +61,7 @@ public class SpanReplaceableTextView extends FrameLayout {
         mHashMap = new TreeMap<>();
         View view = LayoutInflater.from(context).inflate(R.layout.replaceable_text_view, this, true);
         mTextView = (XTextView) view.findViewById(R.id.textView);
+        mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,17);
         mOverLayViewContainer = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         mTextView.setOnDrawFinishedListener(new TextViewOnDrawFinishedListener());
     }
@@ -71,8 +73,8 @@ public class SpanReplaceableTextView extends FrameLayout {
         mOverLayViewContainer.removeAllViews();
         mHashMap.clear();
         mSpannedStr = Html.fromHtml(text, getImageGetter(), getTagHandler());
-        mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
         mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),XForegroundColorSpan.class);
+        mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
     }
 
     public int getLastClickSpanStart(){
@@ -222,14 +224,6 @@ public class SpanReplaceableTextView extends FrameLayout {
         if(mOnReplaceCompleteListener != null){
             mOnReplaceCompleteListener.onReplaceComplete();
         }
-//        int count = 0;
-//        Set<ForegroundColorSpan> set  = mHashMap.keySet();
-//        Iterator<ForegroundColorSpan> iterator = set.iterator();
-//        while (iterator.hasNext()){
-//            List<View> views = mHashMap.get(iterator.next());
-//            count += views.size();
-//        }
-//        Log.e("count",count+"");
     }
 
     public void setBlankTransparent(int spanStart, boolean transparent){
@@ -272,7 +266,7 @@ public class SpanReplaceableTextView extends FrameLayout {
     }
 
     protected Html.ImageGetter getImageGetter() {
-        return new HtmlImageGetter(mContext, mTextView);
+        return new HtmlImageGetter(mTextView);
     }
 
     protected BlankView getView(){
@@ -289,9 +283,6 @@ public class SpanReplaceableTextView extends FrameLayout {
         void onBlankClick(BlankView view,String filledContent,int spanStart);
     }
 
-    public interface OnReplaceCompleteListener{
-        void onReplaceComplete();
-    }
     private class TextViewOnDrawFinishedListener implements XTextView.OnDrawFinishedListener {
 
         @Override
