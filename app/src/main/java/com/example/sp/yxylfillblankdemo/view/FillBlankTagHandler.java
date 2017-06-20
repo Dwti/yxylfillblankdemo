@@ -13,7 +13,7 @@ import org.xml.sax.XMLReader;
  * Created by sp on 17-6-8.
  */
 
-public class EmptyTagHandler implements Html.TagHandler {
+public class FillBlankTagHandler implements Html.TagHandler {
 
     protected int start,end;
 

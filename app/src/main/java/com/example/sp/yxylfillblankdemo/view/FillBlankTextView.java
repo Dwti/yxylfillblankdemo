@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ import java.util.TreeMap;
  * Created by sp on 17-2-23.
  */
 
-public class SpanReplaceableTextView extends FrameLayout {
+public class FillBlankTextView extends FrameLayout {
     protected XTextView mTextView;
     protected RelativeLayout mOverLayViewContainer;
     protected Context mContext;
@@ -41,17 +40,17 @@ public class SpanReplaceableTextView extends FrameLayout {
     private int mCurrClickSpanStart = NONE;
     public static final int NONE = -1; //点击的位置为空，既没有点击的span(比如键盘收起的时候，需要清除所有的span的选中状态)
 
-    public SpanReplaceableTextView(Context context) {
+    public FillBlankTextView(Context context) {
         super(context);
         initView(context);
     }
 
-    public SpanReplaceableTextView(Context context, AttributeSet attrs) {
+    public FillBlankTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public SpanReplaceableTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FillBlankTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
@@ -274,7 +273,7 @@ public class SpanReplaceableTextView extends FrameLayout {
     }
 
     protected Html.TagHandler getTagHandler(){
-        return new EmptyTagHandler();
+        return new FillBlankTagHandler();
     }
 
 

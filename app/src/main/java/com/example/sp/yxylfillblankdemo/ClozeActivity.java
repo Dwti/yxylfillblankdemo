@@ -3,27 +3,12 @@ package com.example.sp.yxylfillblankdemo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Layout;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.example.sp.yxylfillblankdemo.view.ClozeTextView;
 import com.example.sp.yxylfillblankdemo.view.ClozeView;
 import com.example.sp.yxylfillblankdemo.view.EmptyReplacementSpan;
-import com.example.sp.yxylfillblankdemo.view.EmptyTagHandler;
-import com.example.sp.yxylfillblankdemo.view.HtmlImageGetter;
-import com.example.sp.yxylfillblankdemo.view.BlankView;
 import com.example.sp.yxylfillblankdemo.view.OnReplaceCompleteListener;
-import com.example.sp.yxylfillblankdemo.view.XTextView;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 

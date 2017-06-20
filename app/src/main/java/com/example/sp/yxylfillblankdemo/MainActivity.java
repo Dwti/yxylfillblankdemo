@@ -13,14 +13,14 @@ import android.widget.ScrollView;
 
 import com.example.sp.yxylfillblankdemo.view.BlankView;
 import com.example.sp.yxylfillblankdemo.view.OnReplaceCompleteListener;
-import com.example.sp.yxylfillblankdemo.view.SpanReplaceableTextView;
+import com.example.sp.yxylfillblankdemo.view.FillBlankTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity implements KeyboardObserver.KeyBoardVisibleChangeListener {
 
-    private SpanReplaceableTextView mFillBlank;
+    private FillBlankTextView mFillBlank;
 
     private String mContent;
 
@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         setContentView(R.layout.activity_main);
 
         mRootView = findViewById(R.id.rootLayout);
-        mFillBlank = (SpanReplaceableTextView) findViewById(R.id.tv_fill_blank);
+        mFillBlank = (FillBlankTextView) findViewById(R.id.tv_fill_blank);
         mEditLayout = findViewById(R.id.ll_edit);
         mSend = (Button) findViewById(R.id.btnSend);
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -91,7 +91,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
             }
         });
 
-        mFillBlank.setOnBlankClickListener(new SpanReplaceableTextView.OnBlankClickListener() {
+        mFillBlank.setOnBlankClickListener(new FillBlankTextView.OnBlankClickListener() {
             @Override
             public void onBlankClick(BlankView view, String filledContent, final int spanStart) {
                 //当键盘为弹起状态时，也就是mFillBlank.getLastClickSpanStart()!=-1时，需要清除掉 上一个点击的空的选中状态
@@ -151,7 +151,7 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
         }else {
             mBottom.setVisibility(View.VISIBLE);
             mEditLayout.setVisibility(View.GONE);
-            mFillBlank.setLastClickSpanStart(SpanReplaceableTextView.NONE);
+            mFillBlank.setLastClickSpanStart(FillBlankTextView.NONE);
         }
     }
 
