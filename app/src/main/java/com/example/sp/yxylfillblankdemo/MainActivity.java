@@ -62,6 +62,8 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
 
         initListener();
 
+        String stem = StemUtil.initFillBlankStem(mContent,mAnswers);
+        mFillBlank.setText(stem);
 
     }
 
@@ -128,16 +130,6 @@ public class MainActivity extends Activity implements KeyboardObserver.KeyBoardV
                 });
             }
         });
-    }
-
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            String stem = StemUtil.initFillBlankStem(mContent,mAnswers);
-            mFillBlank.setText(stem);
-        }
     }
 
     @Override

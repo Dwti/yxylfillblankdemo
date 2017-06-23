@@ -5,8 +5,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 
-import com.example.sp.yxylfillblankdemo.XForegroundColorSpan;
-
 import org.xml.sax.XMLReader;
 
 /**

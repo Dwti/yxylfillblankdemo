@@ -27,6 +27,8 @@ public class ClozeActivity extends Activity {
         setContentView(R.layout.activity_text_replace);
         clozeTextView = (ClozeTextView) findViewById(R.id.cloze_text_view);
         mContent = FileUtils.fetchFileContent(this, "html.txt");
+        String text = StemUtil.initClozeStem(mContent);
+        clozeTextView.setText(text);
         clozeTextView.setOnReplaceCompleteListener(new OnReplaceCompleteListener() {
             @Override
             public void onReplaceComplete() {
@@ -38,14 +40,5 @@ public class ClozeActivity extends Activity {
                 }
             }
         });
-    }
-
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            clozeTextView.setText(mContent);
-        }
     }
 }

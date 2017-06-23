@@ -3,6 +3,8 @@ package com.example.sp.yxylfillblankdemo;
 import android.support.annotation.NonNull;
 import android.text.style.ForegroundColorSpan;
 
+import com.example.sp.yxylfillblankdemo.view.XForegroundColorSpan;
+
 /**
  * Created by sunpeng on 2017/6/12.
  */

@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.sp.yxylfillblankdemo.R;
 import com.example.sp.yxylfillblankdemo.SpanInfo;
-import com.example.sp.yxylfillblankdemo.XForegroundColorSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,15 +64,21 @@ public class FillBlankTextView extends FrameLayout {
         mTextView.setOnDrawFinishedListener(new TextViewOnDrawFinishedListener());
     }
 
-    public void setText(String text) {
-        mIsReplaceCompleted = false;
-        mLastClickSpanStart = NONE;
-        mCurrClickSpanStart = NONE;
-        mOverLayViewContainer.removeAllViews();
-        mHashMap.clear();
-        mSpannedStr = Html.fromHtml(text, getImageGetter(), getTagHandler());
-        mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),XForegroundColorSpan.class);
-        mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
+    public void setText(final String text) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mIsReplaceCompleted = false;
+                mLastClickSpanStart = NONE;
+                mCurrClickSpanStart = NONE;
+                mOverLayViewContainer.removeAllViews();
+                mHashMap.clear();
+                mSpannedStr = Html.fromHtml(text, getImageGetter(), getTagHandler());
+                mSpans = mSpannedStr.getSpans(0,mSpannedStr.length(),XForegroundColorSpan.class);
+                mTextView.setText(mSpannedStr, TextView.BufferType.SPANNABLE);
+            }
+        });
+
     }
 
     public int getLastClickSpanStart(){
