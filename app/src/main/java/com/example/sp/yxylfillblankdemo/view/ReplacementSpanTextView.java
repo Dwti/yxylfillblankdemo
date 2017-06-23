@@ -21,6 +21,9 @@ import android.widget.TextView;
 import com.example.sp.yxylfillblankdemo.R;
 import com.example.sp.yxylfillblankdemo.StemUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -137,8 +140,29 @@ public abstract class ReplacementSpanTextView<T extends View> extends FrameLayou
         mOnReplaceCompleteListener = onReplaceCompleteListener;
     }
 
-    public TreeMap<EmptyReplacementSpan,T> getClozes(){
+    public TreeMap<EmptyReplacementSpan,T> getReplacements(){
         return mTreeMap;
+    }
+
+    public T getReplaceView(int index){
+        T t = null;
+        int i = 0;
+        for(Map.Entry<EmptyReplacementSpan,T> entry:mTreeMap.entrySet()){
+            if(i == index){
+                t = entry.getValue();
+                break;
+            }
+            i++;
+        }
+        return t;
+    }
+
+    public List<T> getReplaceViews(){
+        List<T> viewList = new ArrayList<>();
+        for(Map.Entry<EmptyReplacementSpan,T> entry:mTreeMap.entrySet()){
+            viewList.add(entry.getValue());
+        }
+        return viewList;
     }
 
     protected abstract T getView();

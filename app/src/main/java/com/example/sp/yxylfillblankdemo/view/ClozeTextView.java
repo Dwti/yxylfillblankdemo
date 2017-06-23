@@ -9,20 +9,18 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
-import android.widget.TextView;
 
-import com.example.sp.yxylfillblankdemo.R;
+import java.util.List;
 
 /**
  * Created by sunpeng on 2017/6/15.
  */
 
-public class ClozeTextView extends ReplacementSpanTextView<ClozeView> {
+public class ClozeTextView extends ReplacementSpanTextView<ClozeView> implements OnReplaceCompleteListener {
 
     private OnClozeClickListener mOnClozeClickListener;
 
-    private ClozeView mLastClickClozeView ;
+    private ClozeView mSelectedClozeView;
 
     public ClozeTextView(@NonNull Context context) {
         super(context);
@@ -30,15 +28,22 @@ public class ClozeTextView extends ReplacementSpanTextView<ClozeView> {
 
     public ClozeTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public ClozeTextView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ClozeTextView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init(){
+        setOnReplaceCompleteListener(this);
     }
 
     @Override
@@ -48,16 +53,16 @@ public class ClozeTextView extends ReplacementSpanTextView<ClozeView> {
             @Override
             public void onClick(View v) {
                 ClozeView cv = (ClozeView) v;
-                if(mLastClickClozeView == cv){
+                if(mSelectedClozeView == cv){
                     return;
                 }
                 if(cv.getTextPosition() == ClozeView.TextPosition.CENTER){
                     cv.performTranslateAnimation(ClozeView.TextPosition.LEFT);
                 }
-                if(mLastClickClozeView != null){
-                    mLastClickClozeView.performTranslateAnimation(ClozeView.TextPosition.CENTER);
+                if(mSelectedClozeView != null){
+                    mSelectedClozeView.performTranslateAnimation(ClozeView.TextPosition.CENTER);
                 }
-                mLastClickClozeView = cv;
+                mSelectedClozeView = cv;
                 if(mOnClozeClickListener != null){
                     mOnClozeClickListener.onClozeClick(cv,cv.getTextNumber() - 1);
                 }
@@ -66,8 +71,37 @@ public class ClozeTextView extends ReplacementSpanTextView<ClozeView> {
         return clozeView;
     }
 
+    public void resetSelected(){
+        if(mSelectedClozeView != null && mSelectedClozeView.getTextPosition() == ClozeView.TextPosition.LEFT){
+            mSelectedClozeView.performTranslateAnimation(ClozeView.TextPosition.CENTER);
+            mSelectedClozeView = null;
+        }
+    }
+
     public void setOnClozeClickListener(OnClozeClickListener listener){
         mOnClozeClickListener = listener;
+    }
+
+    @Override
+    public void onReplaceComplete() {
+        List<ClozeView> views = getReplaceViews();
+        if(views == null || views.size() ==0){
+            return;
+        }
+        for(int i =0; i< views.size(); i++){
+            views.get(i).setTextNumber(i+1);
+        }
+        mSelectedClozeView = views.get(0);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mSelectedClozeView.performTranslateAnimation(ClozeView.TextPosition.LEFT);
+            }
+        });
+    }
+
+    public ClozeView getSelectedClozeView(){
+        return mSelectedClozeView;
     }
 
     public interface OnClozeClickListener{

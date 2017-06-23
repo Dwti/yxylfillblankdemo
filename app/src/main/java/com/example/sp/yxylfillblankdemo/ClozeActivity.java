@@ -3,6 +3,8 @@ package com.example.sp.yxylfillblankdemo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.ViewTreeObserver;
 
 import com.example.sp.yxylfillblankdemo.view.ClozeTextView;
 import com.example.sp.yxylfillblankdemo.view.ClozeView;
@@ -29,16 +31,5 @@ public class ClozeActivity extends Activity {
         mContent = FileUtils.fetchFileContent(this, "html.txt");
         String text = StemUtil.initClozeStem(mContent);
         clozeTextView.setText(text);
-        clozeTextView.setOnReplaceCompleteListener(new OnReplaceCompleteListener() {
-            @Override
-            public void onReplaceComplete() {
-                TreeMap<EmptyReplacementSpan,ClozeView> treeMap = clozeTextView.getClozes();
-                int i = 1;
-                for(Map.Entry<EmptyReplacementSpan,ClozeView> entry:treeMap.entrySet()){
-                    entry.getValue().setTextNumber(i);
-                    i++;
-                }
-            }
-        });
     }
 }
